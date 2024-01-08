@@ -113,3 +113,34 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+            def get(self, cls, id):
+        """get object from database with class and id
+        Args:
+            cls: name of the class
+            id: id of object of the class       """
+        result =  None
+        try: # try querying the DB for the object of the class
+            objs = self.__session.query(cls).all()
+            # iterate over the objects and return the one with the id
+            for obj in objs:
+                if obj.id == id:
+                    result = obj
+
+        except BaseException:
+            pass
+        return result
+
+    def count(self, cls=None):
+        """count number of objects in Dbstorage
+        Args:
+            cls: name of the class"""
+        cls_count = 0 # hold the count of objects
+        if cls is not None:
+            objs = self.__session.query(cls).all()
+            cls_count = len(objs)
+        else: # if cls is none, count all objects in the DB on every class iteratively
+            for k,v in models.classes.items():
+                objs = self.__session.query(v).all()
+                cls_count += len(objs)
+        return cls_count
