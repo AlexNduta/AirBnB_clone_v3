@@ -114,7 +114,7 @@ class TestFileStorage(unittest.TestCase):
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
 
-            def get(self, cls, id):
+    def get(self, cls, id):
         """get object from database with class and id
         Args:
             cls: name of the class

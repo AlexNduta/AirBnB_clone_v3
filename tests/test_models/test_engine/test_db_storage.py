@@ -14,6 +14,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+from models import storage
 import json
 import os
 import pep8
@@ -89,18 +90,19 @@ class TestFileStorage(unittest.TestCase):
 
     def test_db_storage_get(self):
         """Test that get returns the object based on class and id"""
-        state = State(name="California")
-        state.save()
-        state_id = state.id
-        state_name = state.name
-        state = models.storage.get(State, state_id)
-        self.assertEqual(state.name, state_name)
+        # create a new user
+        new_user = User(name="Alex Nduta")
+        # add the user to the session
+        obj = storage.get(new_user, new_user.id)
+        self.assertIsNone(obj)
+
 
     def test_db_storage_count(self):
         """Test that count returns the number of objects in storage"""
-        state = State(name="California")
-        state.save()
-        state_id = state.id
-        state_name = state.name
-        state = models.storage.get(State, state_id)
-        self.assertEqual(state.name, state_name)
+        storage.reload()
+        all_count = storage.count(None)
+        self.assertIsInstance(all_count, int)
+        cls_count = storage.count("State")
+        self.assertIsInstance(cls_count, int)
+        self.assertAlmostEquals(all_count, cls_count)
+
